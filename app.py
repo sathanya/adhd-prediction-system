@@ -6,8 +6,13 @@ import sys
 # ----------------------------
 # ADD PROJECT ROOT
 # ----------------------------
-PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.append(PROJECT_ROOT)
+import os
+import sys
+
+# ADD PROJECT ROOT TO PYTHON PATH (RENDER FIX)
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+if PROJECT_ROOT not in sys.path:
+    sys.path.insert(0, PROJECT_ROOT)
 
 from scoring.inattention import calculate_inattention
 from scoring.impulsivity import calculate_impulsivity
