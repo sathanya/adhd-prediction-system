@@ -1,21 +1,17 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 import os
 import sys
 
 # ----------------------------
-# ADD PROJECT ROOT
+# FLASK APP
 # ----------------------------
-import os
-import sys
-from flask import Flask, render_template
+app = Flask(__name__)
+CORS(app)
 
-@app.route("/")
-def home():
-    return render_template("index.html")
-
-
-# ADD PROJECT ROOT TO PYTHON PATH (RENDER FIX)
+# ----------------------------
+# ADD PROJECT ROOT TO PYTHON PATH
+# ----------------------------
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 if PROJECT_ROOT not in sys.path:
     sys.path.insert(0, PROJECT_ROOT)
@@ -26,17 +22,23 @@ from scoring.hyperactivity import calculate_hyperactivity
 from prediction.predict import predict_adhd
 
 # ----------------------------
-# FLASK APP
-# ----------------------------
-app = Flask(__name__)
-CORS(app)
-
-# ----------------------------
-# HEALTH CHECK
+# FRONTEND ROUTES
 # ----------------------------
 @app.route("/")
-def home():
-    return {"message": "ADHD Prediction API running on Render"}
+def index():
+    return render_template("index.html")
+
+@app.route("/games")
+def games():
+    return render_template("games.html")
+
+@app.route("/form")
+def form():
+    return render_template("form.html")
+
+@app.route("/result")
+def result():
+    return render_template("result.html")
 
 # ----------------------------
 # API ROUTE
@@ -82,10 +84,13 @@ def predict():
         "symptom_sum": symptom_sum,
         "result_text": (
             "ADHD Likely (High correlation with behavioral patterns)"
-            if label == 1
-            else "No ADHD Likely"
+            if label == 1 else "No ADHD Likely"
         ),
-        "disclaimer": (
-            "⚠️ This is an AI-based screening tool and NOT a clinical diagnosis."
-        )
+        "disclaimer": "⚠️ This is an AI-based screening tool and NOT a clinical diagnosis."
     })
+
+# ----------------------------
+# RUN (LOCAL ONLY)
+# ----------------------------
+if __name__ == "__main__":
+    app.run(debug=True)
