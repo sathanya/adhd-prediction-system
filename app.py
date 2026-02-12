@@ -13,11 +13,10 @@ import sys
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 if PROJECT_ROOT not in sys.path:
     sys.path.insert(0, PROJECT_ROOT)
-
-from scoring.inattention import calculate_inattention
-from scoring.impulsivity import calculate_impulsivity
-from scoring.hyperactivity import calculate_hyperactivity
-from prediction.predict import predict_adhd
+from backend.scoring.inattention import calculate_inattention
+from backend.scoring.impulsivity import calculate_impulsivity
+from backend.scoring.hyperactivity import calculate_hyperactivity
+from backend.prediction.predict import predict_adhd
 
 # ----------------------------
 # FLASK APP
