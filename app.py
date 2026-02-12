@@ -8,6 +8,12 @@ import sys
 # ----------------------------
 import os
 import sys
+from flask import Flask, render_template
+
+@app.route("/")
+def home():
+    return render_template("index.html")
+
 
 # ADD PROJECT ROOT TO PYTHON PATH (RENDER FIX)
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
