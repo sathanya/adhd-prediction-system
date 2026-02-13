@@ -6,11 +6,15 @@ import sys
 # ----------------------------
 # FLASK APP
 # ----------------------------
-app = Flask(__name__)
+app = Flask(
+    __name__,
+    template_folder="templates",
+    static_folder="static"   # ✅ FIXED
+)
 CORS(app)
 
 # ----------------------------
-# ADD PROJECT ROOT TO PYTHON PATH
+# ADD PROJECT ROOT TO PATH
 # ----------------------------
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 if PROJECT_ROOT not in sys.path:
@@ -20,15 +24,6 @@ from scoring.inattention import calculate_inattention
 from scoring.impulsivity import calculate_impulsivity
 from scoring.hyperactivity import calculate_hyperactivity
 from prediction.predict import predict_adhd
-
-# ----------------------------
-# FRONTEND ROUTES
-# ----------------------------
-from flask import Flask, render_template, request, jsonify
-from flask_cors import CORS
-
-app = Flask(__name__)
-CORS(app)
 
 # ----------------------------
 # FRONTEND ROUTES
@@ -64,7 +59,6 @@ def predict():
     inattention = calculate_inattention(pilot)
     impulsivity = calculate_impulsivity(reaction)
     hyperactivity = calculate_hyperactivity(shield)
-    symptom_sum = inattention + impulsivity + hyperactivity
 
     features = {
         "Age": user.get("Age", 0),
@@ -73,7 +67,7 @@ def predict():
         "InattentionScore": inattention,
         "HyperactivityScore": hyperactivity,
         "ImpulsivityScore": impulsivity,
-        "SymptomSum": symptom_sum,
+        "SymptomSum": inattention + impulsivity + hyperactivity,
         "Daydream": user.get("Daydream", 0),
         "SleepHours": user.get("SleepHours", 0),
         "ScreenTime": user.get("ScreenTime", 0),
@@ -90,16 +84,6 @@ def predict():
             "hyperactivity": hyperactivity,
             "impulsivity": impulsivity
         },
-        "symptom_sum": symptom_sum,
-        "result_text": (
-            "ADHD Likely (High correlation with behavioral patterns)"
-            if label == 1 else "No ADHD Likely"
-        ),
-        "disclaimer": "⚠️ This is an AI-based screening tool and NOT a clinical diagnosis."
+        "result_text": "ADHD Likely" if label else "No ADHD Likely",
+        "disclaimer": "This is NOT a medical diagnosis."
     })
-
-# ----------------------------
-# RUN (LOCAL ONLY)
-# ----------------------------
-if __name__ == "__main__":
-    app.run(debug=True)

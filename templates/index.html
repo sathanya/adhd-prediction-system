@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ADHD Screening Tool</title>
-    <link rel="stylesheet" href="static/css/style.css">
+
+    <!-- ✅ Flask static path -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 
 <body>
@@ -24,7 +25,8 @@
             <li>Restlessness or hyperactivity</li>
         </ul>
 
-        <a href="form.html">
+        <!-- ✅ Flask route instead of form.html -->
+        <a href="/form">
             <button>Start Assessment</button>
         </a>
     </div>

@@ -10,20 +10,25 @@ function runFlashReaction(done) {
         if (trials >= 30) {
             ctx.clearRect(0, 0, 700, 500);
             alert("Flash Reaction finished");
+            canvas.onclick = null;
             done({ commission_errors, premature_clicks });
             return;
         }
 
         trials++;
         let isGo = Math.random() < 0.7;
+        let responded = false;
+
         ctx.fillStyle = "black";
         ctx.fillRect(0, 0, 700, 500);
 
-        let waitTime = 500 + Math.random() * 1000;
-        let clicked = false;
+        const prematureHandler = () => {
+            if (!responded) premature_clicks++;
+        };
 
-        const prematureHandler = () => premature_clicks++;
         canvas.onclick = prematureHandler;
+
+        let waitTime = 500 + Math.random() * 1000;
 
         setTimeout(() => {
             canvas.onclick = null;
@@ -31,13 +36,24 @@ function runFlashReaction(done) {
             ctx.fillRect(0, 0, 700, 500);
 
             const clickHandler = () => {
-                clicked = true;
-                if (!isGo) commission_errors++;
+                if (responded) return;
+                responded = true;
+
+                if (!isGo) {
+                    commission_errors++;
+                }
             };
+
             canvas.onclick = clickHandler;
 
             setTimeout(() => {
                 canvas.onclick = null;
+
+                // ❗ If GO and user did NOT click → also impulsivity-related
+                if (isGo && !responded) {
+                    commission_errors++;
+                }
+
                 nextTrial();
             }, 600);
         }, waitTime);

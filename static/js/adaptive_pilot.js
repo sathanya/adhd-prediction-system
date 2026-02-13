@@ -12,6 +12,7 @@ function runAdaptivePilot(done) {
         if (trials >= 40) {
             active = false;
             ctx.clearRect(0, 0, 700, 500);
+            document.onkeydown = null; // ✅ cleanup
             alert("Adaptive Pilot finished");
             done({ omissions, distractor_errors });
             return;
@@ -19,14 +20,14 @@ function runAdaptivePilot(done) {
 
         trials++;
         let isTarget = Math.random() < 0.25;
-        let isDistractor = Math.random() < 0.15;
-        let kind = isTarget ? "target" : isDistractor ? "distractor" : "other";
+        let kind = isTarget ? "target" : "non_target";
 
         let y = 0;
         let responded = false;
 
         function fall() {
             if (!active) return;
+
             ctx.clearRect(0, 0, 700, 500);
             ctx.fillStyle = kind === "target" ? "yellow" : "gray";
             ctx.beginPath();
@@ -34,8 +35,10 @@ function runAdaptivePilot(done) {
             ctx.fill();
 
             y += speed;
-            if (y < 500) requestAnimationFrame(fall);
-            else {
+
+            if (y < 500) {
+                requestAnimationFrame(fall);
+            } else {
                 if (kind === "target" && !responded) omissions++;
                 spawnBall();
             }
@@ -44,7 +47,7 @@ function runAdaptivePilot(done) {
         document.onkeydown = e => {
             if (e.code === "Space" && !responded) {
                 responded = true;
-                if (kind === "distractor") distractor_errors++;
+                if (kind !== "target") distractor_errors++;
                 speed *= 1.05;
             }
         };
