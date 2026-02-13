@@ -24,17 +24,26 @@ from prediction.predict import predict_adhd
 # ----------------------------
 # FRONTEND ROUTES
 # ----------------------------
+from flask import Flask, render_template, request, jsonify
+from flask_cors import CORS
+
+app = Flask(__name__)
+CORS(app)
+
+# ----------------------------
+# FRONTEND ROUTES
+# ----------------------------
 @app.route("/")
 def index():
     return render_template("index.html")
 
-@app.route("/games")
-def games():
-    return render_template("games.html")
-
 @app.route("/form")
 def form():
     return render_template("form.html")
+
+@app.route("/games")
+def games():
+    return render_template("games.html")
 
 @app.route("/result")
 def result():
