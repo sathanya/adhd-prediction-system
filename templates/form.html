@@ -1,71 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Details</title>
-    <link rel="stylesheet" href="static/css/style.css">
+
+    <!-- ✅ Flask static path -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 
 <body>
-    <div class="container">
-        <h2>User Information</h2>
+<div class="container">
+    <h2>User Information</h2>
 
-        <input id="age" type="number" placeholder="Age" min="5" required>
+    <input id="age" type="number" placeholder="Age" min="5" required>
 
-        <select id="gender">
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-        </select>
+    <select id="gender">
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+    </select>
 
-        <select id="edu">
-            <option value="Child">Child</option>
-            <option value="Teen">Teen</option>
-            <option value="Undergrad">Undergrad</option>
-            <option value="Adult">Adult</option>
-        </select>
+    <select id="edu">
+        <option value="Child">Child</option>
+        <option value="Teen">Teen</option>
+        <option value="Undergrad">Undergrad</option>
+        <option value="Adult">Adult</option>
+    </select>
 
-        <input id="sleep" type="number" step="0.1" placeholder="Sleep Hours" required>
-        <input id="screen" type="number" step="0.1" placeholder="Screen Time (hrs)" required>
+    <input id="sleep" type="number" step="0.1" placeholder="Sleep Hours" required>
+    <input id="screen" type="number" step="0.1" placeholder="Screen Time (hrs)" required>
 
-        <label>
-            <input type="checkbox" id="daydream"> Frequent Daydreaming
-        </label>
-        <br>
-        <label>
-            <input type="checkbox" id="family"> Family history of ADHD
-        </label>
+    <label>
+        <input type="checkbox" id="daydream"> Frequent Daydreaming
+    </label>
+    <br>
+    <label>
+        <input type="checkbox" id="family"> Family history of ADHD
+    </label>
 
-        <br><br>
-        <button onclick="saveAndGo()">Proceed to Games</button>
-    </div>
+    <br><br>
+    <button onclick="saveAndGo()">Proceed to Games</button>
+</div>
 
-    <script>
-        function saveAndGo() {
-            const age = document.getElementById("age").value;
-            const sleep = document.getElementById("sleep").value;
-            const screen = document.getElementById("screen").value;
+<script>
+function saveAndGo() {
+    const age = document.getElementById("age").value;
+    const sleep = document.getElementById("sleep").value;
+    const screen = document.getElementById("screen").value;
 
-            if (!age || !sleep || !screen) {
-                alert("Please fill all required fields.");
-                return;
-            }
+    if (!age || !sleep || !screen) {
+        alert("Please fill all required fields.");
+        return;
+    }
 
-            localStorage.setItem("user", JSON.stringify({
-                age: age,
-                gender: document.getElementById("gender").value,
-                edu: document.getElementById("edu").value,
-                sleep: sleep,
-                screen: screen,
-                daydream: document.getElementById("daydream").checked ? 1 : 0,
-                family: document.getElementById("family").checked ? 1 : 0
-            }));
+    localStorage.setItem("user", JSON.stringify({
+        age: age,
+        gender: document.getElementById("gender").value,
+        edu: document.getElementById("edu").value,
+        sleep: sleep,
+        screen: screen,
+        daydream: document.getElementById("daydream").checked ? 1 : 0,
+        family: document.getElementById("family").checked ? 1 : 0
+    }));
 
-            location.href = "games.html";
-        }
-    </script>
+    /* ✅ Flask route instead of games.html */
+    location.href = "/games";
+}
+</script>
 </body>
-
 </html>

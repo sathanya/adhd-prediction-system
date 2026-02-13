@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
 <head>
     <meta charset="UTF-8">
     <title>ADHD Games</title>
 
-    <link rel="stylesheet" href="static/css/style.css">
+    <!-- ✅ Flask static path -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
     <style>
         body {
@@ -45,11 +45,6 @@
             cursor: pointer;
         }
 
-        #playBtn:disabled {
-            background: #aaa;
-            cursor: not-allowed;
-        }
-
         canvas {
             display: block;
             margin: 30px auto 0;
@@ -61,23 +56,20 @@
 
 <body>
 
-    <div class="container">
-        <h2 id="title">Game</h2>
-        <div id="rules">Read the rules carefully.</div>
+<div class="container">
+    <h2 id="title">Game</h2>
+    <div id="rules">Read the rules carefully.</div>
 
-        <button id="playBtn">Play</button>
+    <button id="playBtn">Play</button>
 
-        <canvas id="game" width="700" height="500"></canvas>
-    </div>
+    <canvas id="game" width="700" height="500"></canvas>
+</div>
 
-    <!-- GAME LOGIC FILES -->
-    <script src="static/js/adaptive_pilot.js"></script>
-    <script src="static/js/flash_reaction.js"></script>
-    <script src="static/js/steady_shield.js"></script>
-
-    <!-- FLOW CONTROLLER (VERY IMPORTANT: LOAD LAST) -->
-    <script src="static/js/flow.js"></script>
+<!-- ✅ Flask static paths -->
+<script src="{{ url_for('static', filename='js/adaptive_pilot.js') }}"></script>
+<script src="{{ url_for('static', filename='js/flash_reaction.js') }}"></script>
+<script src="{{ url_for('static', filename='js/steady_shield.js') }}"></script>
+<script src="{{ url_for('static', filename='js/flow.js') }}"></script>
 
 </body>
-
 </html>

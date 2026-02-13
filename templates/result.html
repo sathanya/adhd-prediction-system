@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html>
-<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
 <head>
     <title>ADHD Screening Result</title>
+
+    <!-- ✅ Flask static path -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
@@ -44,66 +47,37 @@
 
 <body>
 
-    <div class="box">
-        <h2 id="probability">Loading...</h2>
+<div class="box">
+    <h2 id="probability">Loading...</h2>
+    <div id="scores"></div>
+    <p class="result" id="finalResult"></p>
+    <canvas id="chart" height="280"></canvas>
+    <p class="disclaimer" id="disclaimer"></p>
+</div>
 
-        <div id="scores"></div>
+<script>
+const raw = localStorage.getItem("finalResult");
 
-        <p class="result" id="finalResult"></p>
+if (!raw) {
+    document.getElementById("probability").innerText =
+        "No result found. Please complete the assessment first.";
+} else {
+    const data = JSON.parse(raw);
 
-        <canvas id="chart" height="280"></canvas>
+    document.getElementById("probability").innerText =
+        `ADHD Probability: ${data.probability}%`;
 
-        <p class="disclaimer" id="disclaimer"></p>
-    </div>
+    document.getElementById("scores").innerHTML = `
+        <p class="score">Inattention Score: ${data.scores.inattention} / 9</p>
+        <p class="score">Hyperactivity Score: ${data.scores.hyperactivity} / 9</p>
+        <p class="score">Impulsivity Score: ${data.scores.impulsivity} / 9</p>
+        <p class="score"><b>Symptom Sum:</b> ${data.symptom_sum} / 27</p>
+    `;
 
-    <script>
-        const raw = localStorage.getItem("finalResult");
-
-        if (!raw) {
-            document.getElementById("probability").innerText =
-                "No result found. Please complete the assessment first.";
-        } else {
-            const data = JSON.parse(raw);
-
-            document.getElementById("probability").innerText =
-                `ADHD Probability: ${data.probability}%`;
-
-            document.getElementById("scores").innerHTML = `
-            <p class="score">Inattention Score: ${data.scores.inattention} / 9</p>
-            <p class="score">Hyperactivity Score: ${data.scores.hyperactivity} / 9</p>
-            <p class="score">Impulsivity Score: ${data.scores.impulsivity} / 9</p>
-            <p class="score"><b>Symptom Sum:</b> ${data.symptom_sum} / 27</p>
-        `;
-
-            document.getElementById("finalResult").innerText = data.result_text;
-            document.getElementById("disclaimer").innerText = data.disclaimer;
-
-            new Chart(document.getElementById("chart"), {
-                type: "bar",
-                data: {
-                    labels: ["Inattention", "Hyperactivity", "Impulsivity"],
-                    datasets: [{
-                        label: "Behavioral Scores",
-                        data: [
-                            data.scores.inattention,
-                            data.scores.hyperactivity,
-                            data.scores.impulsivity
-                        ],
-                        backgroundColor: ["#ff7675", "#74b9ff", "#55efc4"]
-                    }]
-                },
-                options: {
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            max: 9
-                        }
-                    }
-                }
-            });
-        }
-    </script>
+    document.getElementById("finalResult").innerText = data.result_text;
+    document.getElementById("disclaimer").innerText = data.disclaimer;
+}
+</script>
 
 </body>
-
 </html>

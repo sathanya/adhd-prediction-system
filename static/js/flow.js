@@ -55,7 +55,6 @@ const ctx = canvas.getContext("2d");
 function loadStep() {
     const step = steps[currentStep];
 
-    // Reset canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     titleEl.innerText = step.title;
@@ -69,12 +68,8 @@ function loadStep() {
         rulesEl.innerText = "Game running...";
 
         step.game((gameResult) => {
-            // Save game result
             results[step.resultKey] = gameResult;
-
-            // Show finished message
             rulesEl.innerText = `${step.title} finished ✔`;
-
             currentStep++;
 
             setTimeout(() => {
@@ -96,7 +91,7 @@ function finishAssessment() {
 
     if (!user.age) {
         alert("User data missing. Please restart assessment.");
-        location.href = "index.html";
+        window.location.href = "/";   // ✅ route, not index.html
         return;
     }
 
@@ -118,23 +113,24 @@ function finishAssessment() {
     rulesEl.innerText = "Calculating results...";
     playBtn.style.display = "none";
 
-    fetch("http://127.0.0.1:5000/predict", {
+    // ✅ RELATIVE PATH (works on Render)
+    fetch("/predict", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)
     })
-        .then(res => {
-            if (!res.ok) throw new Error("Backend error");
-            return res.json();
-        })
-        .then(data => {
-            localStorage.setItem("finalResult", JSON.stringify(data));
-            location.href = "result.html";
-        })
-        .catch(err => {
-            console.error(err);
-            alert("Prediction failed. Is backend running?");
-        });
+    .then(res => {
+        if (!res.ok) throw new Error("Backend error");
+        return res.json();
+    })
+    .then(data => {
+        localStorage.setItem("finalResult", JSON.stringify(data));
+        window.location.href = "/result";   // ✅ route, not result.html
+    })
+    .catch(err => {
+        console.error(err);
+        alert("Prediction failed. Please try again.");
+    });
 }
 
 // ----------------------------
